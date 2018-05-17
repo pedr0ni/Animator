@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
 
-namespace Animator
+namespace Teste
 {
 
     /*
@@ -43,7 +43,7 @@ namespace Animator
             this.velocity = v;
         }
 
-        public void setToCoordinates(int x, int y)
+        public void setMaxVector(int x, int y)
         {
             this.toX = x;
             this.toY = y;
@@ -56,6 +56,13 @@ namespace Animator
 
             this.timer = new FrequencyRunner(this.velocity, this.animate);
             this.timer.Start();
+
+            if (this.type == AnimationType.SIZE_IN)
+            {
+                this.toX = this.control.Size.Width;
+                this.toY = this.control.Size.Height;
+                this.control.Size = new Size(0, 0);
+            }
         }
 
         private void animate()
@@ -83,11 +90,47 @@ namespace Animator
                         this.control.BeginInvoke((MethodInvoker)delegate () { this.control.Location = p; });
                     }
 
-
                     break;
                 case AnimationType.FADE_IN:
                     break;
                 case AnimationType.FADE_OUT:
+                    break;
+                case AnimationType.SIZE_IN:
+
+                    int w = this.control.Size.Width;
+                    int h = this.control.Size.Height;
+
+                    if (toX == w && toY == h)
+                    {
+                        this.timer.Stop();
+                        return;
+                    }
+
+                    if (toX != w) w++;
+                    if (toY != h) h++;
+
+                    if (this.control.InvokeRequired) {
+                        this.control.BeginInvoke((MethodInvoker)delegate () { this.control.Size = new Size(w, h); });
+                    }
+                    
+                    break;
+                case AnimationType.SIZE_OUT:
+                    int w1 = this.control.Size.Width;
+                    int h1 = this.control.Size.Height;
+
+                    if (w1 == 0 && h1 == 0)
+                    {
+                        this.timer.Stop();
+                        return;
+                    }
+
+                    if (w1 != 0) w1--;
+                    if (h1 != 0) h1--;
+
+                    if (this.control.InvokeRequired)
+                    {
+                        this.control.BeginInvoke((MethodInvoker)delegate () { this.control.Size = new Size(w1, h1); });
+                    }
                     break;
                 default:
                     throw new Exception("Defina um tipo de animação (AnimationType).");
@@ -98,7 +141,9 @@ namespace Animator
 
     public enum AnimationType
     {
-        SCROLL, FADE_IN, FADE_OUT
+        SCROLL,
+        FADE_IN, FADE_OUT,
+        SIZE_IN, SIZE_OUT
     }
 
     public class FrequencyRunner
