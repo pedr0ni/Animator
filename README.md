@@ -16,7 +16,7 @@ Você precisa apenas da classe Animator.cs
 Animator anim = new Animator(this.btn_animate);
 anim.setAnimationType(AnimationType.SCROLL);
 anim.setVelocity(1000);
-anim.setToCoordinates(597, 12);
+anim.setMaxVector(597, 12);
 anim.start();
 ```
 
