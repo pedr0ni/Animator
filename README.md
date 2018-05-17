@@ -12,11 +12,22 @@ Você precisa apenas da classe Animator.cs
 
 ## Exemplos
 
+### Scroll
+
 ```c#
 Animator anim = new Animator(this.btn_animate);
 anim.setAnimationType(AnimationType.SCROLL);
 anim.setVelocity(1000);
 anim.setMaxVector(597, 12);
+anim.start();
+```
+
+### Size In/Out
+
+```c#
+Animator anim = new Animator(this.btn_animate);
+anim.setAnimationType(AnimationType.SIZE_IN); // Or SIZE_OUT
+anim.setVelocity(1000);
 anim.start();
 ```
 
